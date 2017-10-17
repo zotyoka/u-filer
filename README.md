@@ -1,12 +1,14 @@
 # uFiler
 
-This package is offering you a more convenient way to manage file uploads.
+The package offers you a more convenient way to manage file uploads in Laravel.
 
-It provides the following: 
-- an endpoint for uploading files
-- a user friendly Vue-component for replacing the regular <input type="file"/>
-- helper trait for your Eloquent models to easily create accessors/mutators
-- a validation-rule for validating files of your models/entities
+Instead of reinventing the wheel at each file-upload managing your uploaded files will be easy and consistent.
+
+- Upload file with unique name, without concurrency problems.
+- Store client-side informations of uploaded files in FileDescriptors.
+- File object for ease of managing files in your application.
+- Helper trait for your Eloquent models to easily create accessors/mutators.
+- User friendly replacement of regular &lt;input type="file"/&gt;
 
 By default the package is configured to upload images but you can use for any mime type.
 
@@ -29,8 +31,6 @@ php artisan vendor:publish --provider="Zotyo\uFiler\PackageServiceProvider"
 ## Usage
 Several components come with the package to reduce the effort of implementing a proper file-upload.
 
-Note: It's really recommended to submit your entities via javascript instead of native html form submit. However it is not mandatory.
-
 ## File-input
 You can publish a __file-input.vue__ component into your _/resources/assets/js/components_ folder. Modify the component so it would fit into your design.
 ```html
@@ -40,37 +40,21 @@ You can publish a __file-input.vue__ component into your _/resources/assets/js/c
 </div>
 
 ```
+The vue-component uploads the file to a specific endpoint.
 
-### Endpoint(Route+Controller)
+Note: You can avoid [VueJS](https://vuejs.org) at all if you want so.
+
+#### Endpoint(Route+Controller)
 The package provides an Http endpoint for uploading files. You can disable the endpoint int the configuration file.
 If you would like to define your custom endpoint, you can still reuse __UploadControllerTrait__.
 ```
 Method    | URI               | Name          | Action
 POST      | upload            |               | Zotyo\uFiler\Http\UploadController@upload
 ```
-### Validation
-Don't forget to validate files when submitting your entities. The package provides the __verify-file-by-token__ validation rule to avoid hijacking of files.
-```php
-<?php
-
-namespace App\Http\Requests;
-
-use Illuminate\Foundation\Http\FormRequest;
-
-class UserFormRequest extends FormRequest
-{
-    public function rules()
-    {
-        return [
-            'avatar' => 'required|verify-file-by-token'
-        ];
-    }
-}
-```
 
 ### Eloquent
-The *HasFile* trait provides methods so you can easily create accessors/mutators in you model.
-In the following example, our User model avatar is an file.
+The __HasFile__ trait provides methods so you can easily create accessors/mutators in you model.
+In the following example User's avatar is a file.
 ```php
 <?php
 
@@ -97,3 +81,30 @@ class User extends Authenticatable
     }
 }
 ```
+
+### Validation
+Don't forget to validate files when submitting your entities. The package provides the __verify-file-by-token__ validation rule to avoid hijacking of files.
+```php
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UserFormRequest extends FormRequest
+{
+    public function rules()
+    {
+        return [
+            'avatar' => 'required|verify-file-by-token'
+        ];
+    }
+}
+```
+
+## TODO
+
+- [ ] Implement helper component for other popular JavaScript frameworks.
+- [ ] Artisan command to clean up.
+- [ ] Multiple file upload.
+
