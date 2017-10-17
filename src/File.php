@@ -69,7 +69,7 @@ class File implements Arrayable
 
     private function getRelativePath()
     {
-        return config('file-uploader.relative_path').'/'.$this->id;
+        return config('u-filer.relative_path').'/'.$this->id;
     }
 
     public function __toString()

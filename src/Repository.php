@@ -63,7 +63,7 @@ class Repository
      */
     private function preserve()
     {
-        $filePath = tempnam((new File(null))->path(), config('file-uploader.prefix'));
+        $filePath = tempnam((new File(null))->path(), config('u-filer.prefix'));
         if ($filePath === false) {
             throw new FileGeneratorException();
         }

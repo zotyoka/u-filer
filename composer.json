@@ -1,6 +1,8 @@
 {
     "name": "zotyo/u-filer",
     "description": "Manage file uploads",
+    "license": "MIT",
+    "keywords": ["file","upload"],
     "authors": [
         {
             "name": "Nagy Zoltan",

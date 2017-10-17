@@ -67,14 +67,14 @@
         },
         computed: {
             showProgress() {
-                return this.percentCompleted > 0 && this.percentCompleted < 100;
+                return this.uFile && (this.percentCompleted > 0 && this.percentCompleted < 100);
             },
             showThumbnail() {
-                return !this.showProgress && this.uFile && this.uFile.client.mime.match(/^image\//);
+                return this.uFile && !this.showProgress && this.uFile.client.mime.match(/^image\//);
                 ;
             },
             showDownload() {
-                return !this.showProgress && !this.showThumbnail;
+                return this.uFile && (!this.showProgress && !this.showThumbnail);
             }
         },
         methods: {

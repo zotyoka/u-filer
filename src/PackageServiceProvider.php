@@ -8,7 +8,7 @@ use Route;
 
 class PackageServiceProvider extends ServiceProvider
 {
-    const CONFIG_NAME = 'uFiler';
+    const CONFIG_NAME = 'u-filer';
 
     /**
      * Bootstrap the application services.

@@ -24,7 +24,7 @@ class FormRequest extends BaseFormRequest
      */
     public function rules()
     {
-        $fileName = config('file-uploader.file-name');
+        $fileName = config('u-filer.file-name');
         return [
             $fileName => 'required|image'
         ];
