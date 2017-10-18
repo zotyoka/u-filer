@@ -1,46 +1,64 @@
 <template>
-    <div class="row" v-bind:class="{'has-error':error}">
-        <div class="col-md-2">
-            <input type="file" ref="file" v-on:input="upload" style="display:none;"/>
+    <div class="container">
+        <br />        
+        <div class="row" v-bind:class="{'has-error':error}">
+            <div class="col-md-4">
+                <input type="file" class="file-input" ref="file" v-on:input="upload"/>
 
-            <div class="btn-group">
-                <button type="button" class="btn btn-primary" v-on:click="openDialog" title="Upload">
-                    <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
-                </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-lg btn-primary" v-on:click="openDialog" title="Upload">
+                        <span class="glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+                    </button>
 
-                <button type="button" class="btn btn-danger" 
-                        v-bind:disabled="!uFile"
-                        v-on:click="remove"
-                        title="Remove">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                </button>
+                    <button type="button" class="btn btn-lg btn-secondary" 
+                            v-if="firstFile"
+                            v-on:click="reset"
+                            title="Reset">
+                        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+                    </button>
 
-                <button type="button" class="btn btn-secondary" 
-                        v-if="firstFile"
-                        v-on:click="reset"
-                        title="Reset">
-                    <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
-                </button>
-            </div> 
+                    <button type="button" class="btn btn-lg btn-danger" 
+                            v-bind:disabled="!uFile"
+                            v-on:click="remove"
+                            title="Remove">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
 
-            <p class="help-block">{{ error }}</p>
-        </div>
-        <div class="col-md-2">
-            <img v-if="showThumbnail" v-bind:src="uFile.url" class="img-thumbnail">
+                    <a v-if="showDownload" v-bind:href="uFile.url" class="btn btn-lg btn-info" title="Download" target="_blank">
+                        <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
+                    </a>
 
-            <a v-if="showDownload" v-bind:href="uFile.url" class="btn btn-info" title="download" target="_blank">
-                <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span>
-            </a>
+                    <a v-if="showThumbnail" v-bind:href="uFile.url" class="btn btn-lg btn-info thumbnail" title="Preview" target="_blank">
+                        <img v-bind:src="uFile.url">
+                    </a>
+                </div> 
 
-            <div  v-if="showProgress" class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-                     v-bind:style="{'width':percentCompleted + '%'}"
-                     v-bind:aria-valuenow="percentCompleted">                         
+                <div v-if="showProgress" class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                         v-bind:style="{'width':percentCompleted + '%'}"
+                         v-bind:aria-valuenow="percentCompleted">                         
+                    </div>
                 </div>
-            </div> 
+
+                <p class="help-block">{{ error }}</p>
+            </div>            
         </div>
     </div>
 </template>
+
+<style type="text/css">
+    .file-input{
+        display:none!important;
+    }
+    .thumbnail{
+        padding: 2px;
+    }
+    .thumbnail>img{
+        height: 40px;
+        margin: 0;
+        padding: 0;
+    }
+</style>
 
 <script>
     import axios from 'axios';
@@ -55,6 +73,7 @@
     }
 
     export default {
+        name: 'file-input',
         props: ['value'],
         data() {
             var uFile = this.value ? new UploadedFile(this.value.id, this.value.token, this.value.url, this.value.client) : null;

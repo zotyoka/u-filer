@@ -1,6 +1,6 @@
 # uFiler
 
-The package offers you a more convenient way to manage file uploads in Laravel.
+The package offers you a more convenient way to manage file uploads in [Laravel](https://laravel.com).
 
 Instead of reinventing the wheel at each file-upload managing your uploaded files will be easy and consistent.
 
@@ -49,7 +49,7 @@ The package provides an Http endpoint for uploading files. You can disable the e
 If you would like to define your custom endpoint, you can still reuse __UploadControllerTrait__.
 ```
 Method    | URI               | Name          | Action
-POST      | upload            |               | Zotyo\uFiler\Http\UploadController@upload
+POST      | upload            | upload        | Zotyo\uFiler\Http\UploadController@upload
 ```
 
 ### Eloquent
@@ -101,10 +101,3 @@ class UserFormRequest extends FormRequest
     }
 }
 ```
-
-## TODO
-
-- [ ] Implement helper component for other popular JavaScript frameworks.
-- [ ] Artisan command to clean up.
-- [ ] Multiple file upload.
-

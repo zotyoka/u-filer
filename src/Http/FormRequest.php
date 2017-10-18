@@ -1,5 +1,4 @@
 <?php
-
 namespace Zotyo\uFiler\Http;
 
 use Illuminate\Foundation\Http\FormRequest as BaseFormRequest;
@@ -24,9 +23,8 @@ class FormRequest extends BaseFormRequest
      */
     public function rules()
     {
-        $fileName = config('u-filer.file-name');
         return [
-            $fileName => 'required|image'
+            'file' => 'required|image'
         ];
     }
 }

@@ -12,8 +12,7 @@ trait UploadControllerTrait
      */
     public function upload(FormRequest $request, Repository $repo)
     {
-        $fileName = config('u-filer.file-name');
-        $file     = $repo->store($request->file($fileName));
+        $file     = $repo->store($request->file('file'));
         return $file->toArray();
     }
 }
