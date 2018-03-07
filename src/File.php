@@ -2,31 +2,27 @@
 
 namespace Zotyo\uFiler;
 
-use Illuminate\Contracts\Support\Arrayable;
+// use Illuminate\Contracts\Support\Arrayable;
 
-class File implements Arrayable
+final class File //implements Arrayable
 {
     private $id;
+    private $url;
+    private $token;
+    private $name;
+    private $mime;
+    private $ext;
+    private $size;
 
-    public function __construct($id)
+    public function __construct(string $id, string $url, string $token, string $name, string $mime, string $ext, string $size)
     {
         $this->id = $id;
-    }
-
-    public function exists()
-    {
-        $path = $this->path();
-        return file_exists($path) && is_file($path);
-    }
-
-    public function path()
-    {
-        return public_path($this->getRelativePath());
-    }
-
-    public function url()
-    {
-        return asset($this->getRelativePath());
+        $this->url = $url;
+        $this->token = $token;
+        $this->name = $name;
+        $this->mime = $mime;
+        $this->ext = $ext;
+        $this->size = $size;
     }
 
     public function id()
@@ -34,9 +30,9 @@ class File implements Arrayable
         return $this->id;
     }
 
-    public function relPath()
+    public function url()
     {
-        return $this->getRelativePath();
+        return $this->url;
     }
 
     /**
@@ -45,34 +41,25 @@ class File implements Arrayable
      */
     public function toArray()
     {
-        $descriptor = new FileDescriptor($this);
-
-        $ret = [
+        return [
             'id' => $this->id(),
             'url' => $this->url(),
-            ] + (array) $descriptor->read();
-
-        return $ret;
+            'token' => $this->token,
+            'client' => [
+                'name' => $this->name,
+                'mime' => $this->mime,
+                'ext' => $this->ext,
+                'size' => $this->size,
+            ]
+        ];
     }
 
-    public function isValidToken($token)
+    public function isValidToken($token) : bool
     {
-        $descriptor = new FileDescriptor($this);
-        return $descriptor->read()->token === $token;
+        return $this->token === $token;
     }
 
-    public function description()
-    {
-        $desc = new FileDescriptor($this);
-        return $desc->read();
-    }
-
-    private function getRelativePath()
-    {
-        return config('u-filer.relative_path').'/'.$this->id;
-    }
-
-    public function __toString()
+    public function __toString() : string
     {
         return $this->id();
     }
