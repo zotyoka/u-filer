@@ -104,7 +104,7 @@ class LocalFileSystemRepository implements Repository
 
     protected function generateToken() : string
     {
-        return md5(microtime().rand(0, 123456789));
+        return sha1(microtime().rand(0, 123456789));
     }
 
     protected function path(string $id) : string

@@ -11,8 +11,8 @@ class AwsS3RepositoryTest extends GeneralRepositoryTest
     {
         $s3client = new S3Client([
             'version' => 'latest',
-            'region'  => 'us-west-2'
+            'region'  => 'eu-west-1'
         ]);
-        $this->repo = new AwsS3Repository($s3client);
+        $this->repo = new AwsS3Repository($s3client, 'zotyo-test-bucket');
     }
 }
