@@ -8,7 +8,7 @@ use Zotyo\uFiler\Exceptions\FileNotFoundException;
 use Zotyo\uFiler\Repository;
 use Zotyo\uFiler\File;
 use Aws\S3\S3Client;
-use Exception;
+use Throwable;
 
 class AwsS3Repository implements Repository
 {
@@ -56,11 +56,11 @@ class AwsS3Repository implements Repository
             $mime = $headers['x-amz-meta-client_mime'];
             $ext = $headers['x-amz-meta-client_ext'];
             $size = $headers['x-amz-meta-client_size'];
-        } catch (Exception $ex) {
-            throw (new FileNotFoundException)->setID($id);
-        }
 
-        return new File($id, $url, $token, $name, $mime, $ext, $size);
+            return new File($id, $url, $token, $name, $mime, $ext, $size);
+        } catch (Throwable $ex) {
+            throw (new FileNotFoundException("", 0, $ex))->setID($id);
+        }
     }
     
     public function find(string $id, string $default = 'default') : File
