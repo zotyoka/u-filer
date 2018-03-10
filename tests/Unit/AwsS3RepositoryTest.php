@@ -13,6 +13,6 @@ class AwsS3RepositoryTest extends GeneralRepositoryTest
             'version' => 'latest',
             'region'  => 'eu-west-1'
         ]);
-        $this->repo = new AwsS3Repository($s3client, 'zotyo-test-bucket');
+        $this->repo = new AwsS3Repository($s3client, 'zotyo-test-bucket', 'za-prefix-');
     }
 }

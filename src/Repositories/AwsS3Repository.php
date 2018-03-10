@@ -14,11 +14,13 @@ class AwsS3Repository implements Repository
 {
     protected $s3client;
     protected $bucket;
+    protected $prefix;
 
-    public function __construct(S3Client $s3client, string $bucket)
+    public function __construct(S3Client $s3client, string $bucket, string $prefix)
     {
         $this->s3client = $s3client;
         $this->bucket = $bucket;
+        $this->prefix = $prefix;
     }
 
     public function store(UploadedFile $file) : File
@@ -74,7 +76,7 @@ class AwsS3Repository implements Repository
 
     protected function uuid(UploadedFile $file) : string
     {
-        return sha1(microtime().hash_file('sha256', $file->getPathname()));
+        return $this->prefix.sha1(microtime().hash_file('sha256', $file->getPathname()));
     }
 
     protected function generateToken() : string

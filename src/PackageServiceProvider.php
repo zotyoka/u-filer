@@ -2,8 +2,9 @@
 namespace Zotyo\uFiler;
 
 use Illuminate\Support\ServiceProvider;
-use Validator;
 use Route;
+use Zotyo\uFiler\Repositories\LocalFileSystemRepository;
+use Zotyo\uFiler\Repositories\AwsS3Repository;
 
 class PackageServiceProvider extends ServiceProvider
 {
@@ -16,10 +17,7 @@ class PackageServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Validator::extend('VerifyFileByToken', UploadedFileValidator::class.'@verifyFileByToken');
-
         $this->publishes([
-            __DIR__.'/assets/uploads' => public_path(config(self::CONFIG_NAME.'.relative_path')),
             __DIR__.'/assets/js'      => resource_path('/assets/js'),
             ], 'public');
 
@@ -38,9 +36,31 @@ class PackageServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->getMyConfigPath(), self::CONFIG_NAME);
 
         if (config(self::CONFIG_NAME.'.route.enabled')) {
-            Route::post(config(self::CONFIG_NAME.'.route.url'), \Zotyo\uFiler\Http\UploadController::class.'@upload')
-                ->name(config(self::CONFIG_NAME.'.route.name'));
+            Route::post($this->cfg('route.url'), \Zotyo\uFiler\Http\UploadController::class.'@upload')
+                ->name($this->cfg('route.name'));
         }
+
+        switch ($this->cfg('repo')) {
+            case 'local':
+                app()->singletion(Repository::class, new LocalFileSystemRepository(
+                    $this->cfg('repos.local.dir'),
+                    $this->cfg('prefix'),
+                    $this->cfg('repos.local.baseUrl')
+                ));
+                break;
+            case 'aws':
+                app()->singletion(Repository::class, new AwsS3Repository(
+                    new \Aws\S3\S3Client($this->cfg('repos.aws.s3client')),
+                    $this->cfg('repos.aws.bucket'),
+                    $this->cfg('prefix')
+                ));
+                break;
+        }
+    }
+
+    private function cfg(string $key)
+    {
+        return config(self::CONFIG_NAME.'.'.$key);
     }
 
     private function getMyConfigPath()
