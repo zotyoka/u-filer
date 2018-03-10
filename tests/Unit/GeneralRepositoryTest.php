@@ -1,12 +1,13 @@
 <?php
 
-use Zotyo\uFiler\Repository;
 use Zotyo\uFiler\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use PHPUnit\Framework\TestCase;
+
+require_once 'FileInstanceTrait.php';
 
 abstract class GeneralRepositoryTest extends TestCase
 {
+    use FileInstanceTrait;
     /**
      * @var Repository
      */
@@ -39,34 +40,5 @@ abstract class GeneralRepositoryTest extends TestCase
         $this->assertInstanceOf(File::class, $file2);
         $array = $file->toArray();
         $this->assertEquals($file->id(), $file2->id());
-    }
-
-    protected function fileInstance()
-    {
-        // Using UploadedFile in test mode will move the file.
-        // We need duplicate the file.
-        copy(__DIR__.'/../images.jpeg', $this->path());
-
-        return new UploadedFile($this->path(), $this->name(), $this->mime(), $this->size(), null, true);
-    }
-
-    protected function path()
-    {
-        return __DIR__.'/../junk/test.jpeg';
-    }
-
-    protected function mime()
-    {
-        return 'image/jpeg';
-    }
-
-    protected function name()
-    {
-        return 'example.jpg';
-    }
-
-    protected function size()
-    {
-        return filesize($this->path());
     }
 }
