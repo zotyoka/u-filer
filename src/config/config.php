@@ -15,7 +15,9 @@ return [
      * Prefix for the uploaded file.
      * It can be useful if you are about to migrate your files between environments
      */
-    'prefix'        => env('APP_ENV'),
+    'prefix'        => function () {
+        return env('APP_ENV').'-';
+    },
 
     /**
      * The repository implementation. Should refer a key of repos.
@@ -24,8 +26,12 @@ return [
 
     'repos' => [
         'local' => [
-            'dir' => public_path('uploads'),
-            'baseUrl' => assets('uploads'),
+            'dir' => function () {
+                return public_path('uploads');
+            },
+            'baseUrl' => function () {
+                return asset('uploads');
+            },
         ],
         'aws' => [
             /**

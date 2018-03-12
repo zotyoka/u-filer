@@ -18,6 +18,7 @@ class PackageServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
+            __DIR__.'/assets/uploads' => $this->cfg('repos.local.dir')(),
             __DIR__.'/assets/js'      => resource_path('/assets/js'),
             ], 'public');
 
@@ -35,25 +36,29 @@ class PackageServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom($this->getMyConfigPath(), self::CONFIG_NAME);
 
-        if (config(self::CONFIG_NAME.'.route.enabled')) {
+        if ($this->cfg('route.enabled')) {
             Route::post($this->cfg('route.url'), \Zotyo\uFiler\Http\UploadController::class.'@upload')
                 ->name($this->cfg('route.name'));
         }
 
         switch ($this->cfg('repo')) {
             case 'local':
-                app()->singletion(Repository::class, new LocalFileSystemRepository(
-                    $this->cfg('repos.local.dir'),
-                    $this->cfg('prefix'),
-                    $this->cfg('repos.local.baseUrl')
-                ));
+                app()->singleton(Repository::class, function () {
+                    return new LocalFileSystemRepository(
+                        $this->cfg('repos.local.dir')(),
+                        $this->cfg('prefix')(),
+                        $this->cfg('repos.local.baseUrl')()
+                    );
+                });
                 break;
             case 'aws':
-                app()->singletion(Repository::class, new AwsS3Repository(
-                    new \Aws\S3\S3Client($this->cfg('repos.aws.s3client')),
-                    $this->cfg('repos.aws.bucket'),
-                    $this->cfg('prefix')
-                ));
+                app()->singleton(Repository::class, function () {
+                    return new AwsS3Repository(
+                        new \Aws\S3\S3Client($this->cfg('repos.aws.s3client')),
+                        $this->cfg('repos.aws.bucket'),
+                        $this->cfg('prefix')()
+                    );
+                });
                 break;
         }
     }

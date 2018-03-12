@@ -1,18 +1,12 @@
 <?php
 
-use Zotyo\uFiler\uFileRule;
+use Zotyo\uFiler\UFileRule;
 use Zotyo\uFiler\Repositories\LocalFileSystemRepository;
 use Zotyo\uFiler\File;
 use PHPUnit\Framework\TestCase;
 
 require_once 'FileInstanceTrait.php';
-
-if (!function_exists('trans')) {
-    function trans($str)
-    {
-        return $str;
-    }
-}
+require_once 'TranslatorMock.php';
 
 class ValidatorTest extends TestCase
 {
@@ -24,7 +18,7 @@ class ValidatorTest extends TestCase
     public function setUp()
     {
         $this->repo = new LocalFileSystemRepository(__DIR__.'/../junk', 'whatever-', '');
-        $this->v = new uFileRule($this->repo);
+        $this->v = new UFileRule($this->repo, new TranslatorMock);
     }
 
     public function testNotFoundMissingId()

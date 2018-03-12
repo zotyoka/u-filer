@@ -2,9 +2,9 @@
 
 namespace Zotyo\uFiler;
 
-// use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Arrayable;
 
-final class File //implements Arrayable
+final class File implements Arrayable
 {
     private $id;
     private $url;

@@ -2,7 +2,10 @@
     "name": "zotyo/u-filer",
     "description": "Manage file uploads",
     "license": "MIT",
-    "keywords": ["file","upload"],
+    "keywords": [
+        "file",
+        "upload"
+    ],
     "authors": [
         {
             "name": "Nagy Zoltan",
@@ -10,7 +13,9 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "symfony/http-foundation": ">=3.3",
+        "illuminate/contracts": "~5.5"
     },
     "autoload": {
         "psr-4": {

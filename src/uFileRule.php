@@ -2,20 +2,22 @@
 
 namespace Zotyo\uFiler;
 
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Contracts\Validation\Rule;
 use Throwable;
 
-// use Illuminate\Contracts\Validation\Rule;
-
-class uFileRule //implements Rule
+class UFileRule implements Rule
 {
     protected $repo;
+    protected $trans;
     protected $notFoundMessage = 'validation.file_not_found';
     protected $invalidTokenMessage = 'validation.invalid_token';
     protected $message = 'WAITINNG';
 
-    public function __construct(Repository $repo)
+    public function __construct(Repository $repo, Translator $trans)
     {
         $this->repo = $repo;
+        $this->trans = $trans;
     }
 
     public function passes($attribute, $value)
@@ -38,6 +40,6 @@ class uFileRule //implements Rule
 
     public function message()
     {
-        return trans($this->message);
+        return $this->trans->trans($this->message);
     }
 }

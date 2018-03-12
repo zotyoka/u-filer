@@ -4,24 +4,23 @@ namespace Zotyo\uFiler;
 
 trait HasFile
 {
-
     /**
      * Returns a File instance for the specified $key column
      * @param string $key Attribute name
      * @return File
      */
-    protected function getFile($key)
+    protected function getFile(string $key)
     {
-        return empty($this->attributes[$key]) ? null : (new Repository)->findOrFail($this->attributes[$key]);
+        return empty($this->attributes[$key]) ? null : $this->repo->findOrFail($this->attributes[$key]);
     }
 
     /**
      * Sets an existing File instance to the specified $key attribute
      * @param string $key Attribute name
      * @param mixed $value Value with an existing file identifier
-     * @throws Exceptions\FileNotFoundException
+     * @throws .\Exceptions\FileNotFoundException
      */
-    protected function setFile($key, $value)
+    protected function setFile(string $key, $value)
     {
         if (empty($value)) {
             return $this->attributes[$key] = null;
@@ -35,7 +34,12 @@ trait HasFile
         if (is_string($value)) {
             $fileID = $value;
         }
-        $file                   = (new Repository)->findOrFail($fileID);
+        $file                   = $this->repo->findOrFail($fileID);
         $this->attributes[$key] = (string) $file;
+    }
+
+    private function repo() : Repository
+    {
+        return app()->make(Repository::class);
     }
 }
