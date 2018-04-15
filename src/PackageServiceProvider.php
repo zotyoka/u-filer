@@ -41,25 +41,27 @@ class PackageServiceProvider extends ServiceProvider
                 ->name($this->cfg('route.name'));
         }
 
-        switch ($this->cfg('repo')) {
-            case 'local':
-                app()->singleton(Repository::class, function () {
-                    return new LocalFileSystemRepository(
-                        $this->cfg('repos.local.dir')(),
-                        $this->cfg('prefix')(),
-                        $this->cfg('repos.local.baseUrl')()
-                    );
-                });
-                break;
-            case 'aws':
-                app()->singleton(Repository::class, function () {
-                    return new AwsS3Repository(
-                        new \Aws\S3\S3Client($this->cfg('repos.aws.s3client')),
-                        $this->cfg('repos.aws.bucket'),
-                        $this->cfg('prefix')()
-                    );
-                });
-                break;
+        if (!app()->bound(Repository::class)) {
+            switch ($this->cfg('repo')) {
+                case 'local':
+                    app()->singleton(Repository::class, function () {
+                        return new LocalFileSystemRepository(
+                            $this->cfg('repos.local.dir')(),
+                            $this->cfg('prefix')(),
+                            $this->cfg('repos.local.baseUrl')()
+                        );
+                    });
+                    break;
+                case 'aws':
+                    app()->singleton(Repository::class, function () {
+                        return new AwsS3Repository(
+                            new \Aws\S3\S3Client($this->cfg('repos.aws.s3client')),
+                            $this->cfg('repos.aws.bucket'),
+                            $this->cfg('prefix')()
+                        );
+                    });
+                    break;
+            }
         }
     }
 
